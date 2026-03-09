@@ -1,38 +1,31 @@
-<script setup lang="ts">
-import { onMounted } from "vue";
-import Container from "@/components/Container.vue";
-import WeatherCard from "@/components/WeatherCard.vue";
-import { useWeather } from "@/composables/useWeather";
-
-const { currentWeather, isLoading, error, fetchWeather } = useWeather();
-
-// Київ — для тесту
-onMounted(() => {
-  fetchWeather(38.896887, -77.03651, "uk");
-});
-
-const t = (key: string): string => {
-  const translations: Record<string, string> = {
-    feelsLike: "Відчувається як",
-    humidity: "Вологість",
-    wind: "Вітер",
-    pressure: "Тиск",
-    sunrise: "Схід",
-    sunset: "Захід",
-  };
-  return translations[key] ?? key;
-};
-</script>
-
 <template>
   <Container>
+    <CitySearch @select="onCitySelect" />
     <WeatherCard
       :current-weather="currentWeather"
+      :forecast="forecast"
       :is-loading="isLoading"
       :error="error"
-      :t="t"
     />
   </Container>
 </template>
 
-<style scoped></style>
+<script setup lang="ts">
+import { onMounted } from "vue";
+import Container from "@/components/Container.vue";
+import WeatherCard from "@/components/WeatherCard.vue";
+import CitySearch from "@/components/CitySearch.vue";
+import { useWeather } from "@/composables/useWeather";
+import type { GeoCity } from "@/types/geo";
+
+const { currentWeather, forecast, isLoading, error, fetchWeather } =
+  useWeather();
+
+onMounted(() => {
+  fetchWeather(50.4501, 30.5234, "uk");
+});
+
+const onCitySelect = (city: GeoCity) => {
+  fetchWeather(city.lat, city.lon, "uk");
+};
+</script>
