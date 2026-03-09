@@ -11,8 +11,8 @@
     "lint:fix": "eslint . --ext .ts,.vue --fix && echo \"ESLint: errors fixed\""
   },
   "dependencies": {
+    "apexcharts": "^5.10.3",
     "axios": "^1.13.6",
-    "chart.js": "^4.5.1",
     "modern-normalize": "^3.0.1",
     "vue": "^3.5.25"
   },
