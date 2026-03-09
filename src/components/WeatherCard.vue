@@ -84,22 +84,31 @@
           </span>
         </div>
       </div>
+
+      <WeatherChart :points="todayPoints" />
     </template>
   </div>
 </template>
 
 <script setup lang="ts">
 import { computed } from "vue";
+import WeatherChart from "@/components/WeatherChart.vue";
 import Loader from "@/components/Loader.vue";
+import { useI18n } from "@/composables/useI18n";
+import { useForecastChart } from "@/composables/useForecastChart";
 import { getWeatherTheme } from "@/utils/weatherTheme";
 import type { CurrentWeather } from "@/types/weather";
+import type { ForecastResponse } from "@/types/forecast";
 
 const props = defineProps<{
   currentWeather: CurrentWeather | null;
+  forecast: ForecastResponse | null;
   isLoading: boolean;
   error: string | null;
-  t: (key: string) => string;
 }>();
+
+const { t } = useI18n();
+const { todayPoints } = useForecastChart(computed(() => props.forecast));
 
 const theme = computed(() => {
   const condition = props.currentWeather?.weather[0];
