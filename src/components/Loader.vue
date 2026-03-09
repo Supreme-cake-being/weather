@@ -35,7 +35,7 @@ withDefaults(
 .loader__spinner {
   border-radius: 50%;
   border: 3px solid rgba(255, 255, 255, 0.15);
-  border-top-color: #fff;
+  border-top-color: #a9a9a9;
   animation: spin 0.7s linear infinite;
 }
 
