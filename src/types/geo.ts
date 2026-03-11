@@ -4,4 +4,5 @@ export interface GeoCity {
   state?: string;
   lat: number;
   lon: number;
+  local_names?: Record<string, string>;
 }
