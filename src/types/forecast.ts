@@ -18,6 +18,7 @@ export interface ForecastItem {
   rain?: WeatherRain;
   snow?: WeatherSnow;
   dt_txt: string;
+  pop: number;
 }
 
 export interface ForecastResponse {
