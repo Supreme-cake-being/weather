@@ -26,7 +26,7 @@ const buildOptions = (
     background: "transparent",
     fontFamily: "inherit",
   },
-  series: [{ name: "°C", data: points.map((p) => p.temp) }],
+  series: [{ name: "t", data: points.map((p) => p.temp) }],
   xaxis: {
     categories: points.map((p) => p.time),
     labels: {

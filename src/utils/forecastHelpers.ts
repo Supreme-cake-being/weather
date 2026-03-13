@@ -2,8 +2,9 @@ import type { ForecastItem } from "@/types/forecast";
 import type { ChartPoint } from "@/types/chart";
 
 export const getForecastForToday = (list: ForecastItem[]): ForecastItem[] => {
-  const today = new Date().toISOString().slice(0, 10); // yyyy-mm-dd
-  return list.filter((item) => item.dt_txt.startsWith(today));
+  const now = Math.floor(Date.now() / 1000);
+  const in24h = now + 24 * 60 * 60;
+  return list.filter((item) => item.dt >= now && item.dt <= in24h);
 };
 
 export const getForecastForWeek = (list: ForecastItem[]): ForecastItem[] => {

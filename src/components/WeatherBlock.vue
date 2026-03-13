@@ -3,7 +3,7 @@
     <div class="weather-block__toolbar">
       <CitySearch @select="onCitySelect" />
 
-      <!-- Перемикач день / 5 днів — показуємо тільки коли є дані -->
+      <!-- Toggle day / 5 days -->
       <div v-if="currentWeather" class="weather-block__toggle">
         <button
           class="weather-block__toggle-btn"
@@ -22,21 +22,23 @@
       </div>
     </div>
 
-    <WeatherCard
-      :current-weather="currentWeather"
-      :is-loading="isLoading"
-      :error="error"
-    >
-      <template #actions>
-        <slot name="actions" />
-      </template>
-    </WeatherCard>
+    <div class="weather-block__card-wrap" :style="wrapStyle">
+      <WeatherCard
+        :current-weather="currentWeather"
+        :is-loading="isLoading"
+        :error="error"
+      >
+        <template #actions>
+          <slot name="actions" />
+        </template>
+      </WeatherCard>
 
-    <WeatherChart
-      v-if="currentWeather && chartPoints.length"
-      :points="chartPoints"
-      :text-color="textColor"
-    />
+      <WeatherChart
+        v-if="currentWeather && chartPoints.length"
+        :points="chartPoints"
+        :text-color="textColor"
+      />
+    </div>
   </div>
 </template>
 
@@ -57,33 +59,36 @@ import type { GeoCity } from "@/types/geo";
 
 const { lang } = useI18n();
 const { currentWeather, forecast, isLoading, error, load } = useWeather();
-
 const mode = ref<"day" | "week">("day");
 
 const onCitySelect = (city: GeoCity) => {
   load(city, lang.value);
 };
 
-// Theme for passing the text color to the chart
-const textColor = computed(() => {
+const theme = computed(() => {
   const condition = currentWeather.value?.weather[0];
-  if (!currentWeather.value || !condition) return "#cbd5e1";
+  if (!currentWeather.value || !condition) return null;
   return getWeatherTheme(
     condition.id,
     currentWeather.value.sys.sunrise,
     currentWeather.value.sys.sunset,
-  ).textColor;
+  );
 });
 
-// Chart reacts to the mode toggle
+const wrapStyle = computed(() => ({
+  background:
+    theme.value?.gradient ?? "linear-gradient(135deg, #2980b9, #6dd5fa)",
+  color: theme.value?.textColor ?? "#ffffff",
+}));
+
+const textColor = computed(() => theme.value?.textColor ?? "#ffffff");
+
 const chartPoints = computed(() => {
   if (!forecast.value) return [];
-
   const items =
     mode.value === "day"
       ? getForecastForToday(forecast.value.list)
       : getForecastForWeek(forecast.value.list);
-
   return forecastToChartPoints(items, mode.value === "day" ? "time" : "date");
 });
 </script>

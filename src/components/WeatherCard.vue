@@ -1,5 +1,5 @@
 <template>
-  <div class="weather-card" :style="cardStyle">
+  <div class="weather-card">
     <Loader v-if="isLoading" size="lg" />
 
     <div v-else-if="error" class="weather-card__error">
@@ -54,7 +54,6 @@
 <script setup lang="ts">
 import { computed } from "vue";
 import Loader from "@/components/Loader.vue";
-import { getWeatherTheme } from "@/utils/weatherTheme";
 import type { CurrentWeather } from "@/types/weather";
 
 const props = defineProps<{
@@ -62,22 +61,6 @@ const props = defineProps<{
   isLoading: boolean;
   error: string | null;
 }>();
-
-const theme = computed(() => {
-  const condition = props.currentWeather?.weather[0];
-  if (!props.currentWeather || !condition) return null;
-  return getWeatherTheme(
-    condition.id,
-    props.currentWeather.sys.sunrise,
-    props.currentWeather.sys.sunset,
-  );
-});
-
-const cardStyle = computed(() => ({
-  background:
-    theme.value?.gradient ?? "linear-gradient(135deg, #2980b9, #6dd5fa)",
-  color: theme.value?.textColor ?? "#ffffff",
-}));
 
 const iconUrl = computed(() => {
   const icon = props.currentWeather?.weather[0]?.icon;
@@ -99,15 +82,19 @@ const formatTime = (unix: number): string =>
   });
 
 const details = computed(() => {
-  const w = props.currentWeather;
-  if (!w) return [];
+  const weather = props.currentWeather;
+  if (!weather) return [];
 
   return [
-    { icon: "💧", label: "Humidity", value: `${w.main.humidity}%` },
-    { icon: "💨", label: "Wind", value: `${Math.round(w.wind.speed)} m/s` },
-    { icon: "🔵", label: "Pressure", value: `${w.main.pressure} hPa` },
-    { icon: "🌅", label: "Sunrise", value: formatTime(w.sys.sunrise) },
-    { icon: "🌇", label: "Sunset", value: formatTime(w.sys.sunset) },
+    { icon: "💧", label: "Humidity", value: `${weather.main.humidity}%` },
+    {
+      icon: "💨",
+      label: "Wind",
+      value: `${Math.round(weather.wind.speed)} m/s`,
+    },
+    { icon: "🔵", label: "Pressure", value: `${weather.main.pressure} hPa` },
+    { icon: "🌅", label: "Sunrise", value: formatTime(weather.sys.sunrise) },
+    { icon: "🌇", label: "Sunset", value: formatTime(weather.sys.sunset) },
   ];
 });
 </script>
