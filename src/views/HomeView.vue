@@ -19,14 +19,14 @@
       class="home__add-btn"
       @click="addBlock"
     >
-      + Add city
+      {{ t("addCity") }}
     </button>
 
     <Modal
       v-if="blockToRemove !== null"
-      message="Are you sure you want to delete this block?"
-      confirm-text="Delete"
-      cancel-text="Cancel"
+      :message="t('deleteBlockMessage')"
+      :confirm-text="t('delete')"
+      :cancel-text="t('cancel')"
       @confirm="removeBlock"
       @cancel="cancelBlock"
     />
@@ -37,6 +37,9 @@
 import { ref } from "vue";
 import WeatherBlock from "@/components/WeatherBlock.vue";
 import Modal from "@/components/Modal.vue";
+import { useI18n } from "@/composables/useI18n";
+
+const { t } = useI18n();
 
 const MAX_BLOCKS = 5;
 

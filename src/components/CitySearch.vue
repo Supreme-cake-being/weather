@@ -5,7 +5,7 @@
         v-model="query"
         class="city-search__input"
         type="text"
-        placeholder="Search city"
+        :placeholder="t('searchCity')"
         autocomplete="off"
         role="combobox"
         aria-autocomplete="list"
@@ -67,11 +67,14 @@ import { searchCities } from "@/api";
 import type { GeoCity } from "@/types/geo";
 import { formatCityLabel } from "@/utils/formatCity";
 import { useDebounce } from "@/composables/useDebounce";
+import { useI18n } from "@/composables/useI18n";
 import Loader from "@/components/Loader.vue";
 
 const emit = defineEmits<{
   select: [city: GeoCity];
 }>();
+
+const { t } = useI18n();
 
 const query = ref("");
 const suggestions = ref<GeoCity[]>([]);

@@ -3,23 +3,24 @@
     class="loader"
     :class="`loader--${size}`"
     role="status"
-    :aria-label="label"
+    :aria-label="label ?? t('loading')"
   >
     <div class="loader__spinner" />
-    <span class="loader__sr-text">{{ label }}</span>
+    <span class="loader__sr-text">{{ label ?? t("loading") }}</span>
   </div>
 </template>
 
 <script setup lang="ts">
+import { useI18n } from "@/composables/useI18n";
+
+const { t } = useI18n();
+
 withDefaults(
   defineProps<{
     size?: "sm" | "md" | "lg";
     label?: string;
   }>(),
-  {
-    size: "md",
-    label: "Loading...",
-  },
+  { size: "md" },
 );
 </script>
 

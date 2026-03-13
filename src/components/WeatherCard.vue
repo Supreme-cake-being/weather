@@ -32,7 +32,8 @@
           {{ currentWeather.weather[0].description }}
         </p>
         <p class="weather-card__feels-like">
-          Feels like: {{ Math.round(currentWeather.main.feels_like) }}°C
+          {{ t("feelsLike") }}:
+          {{ Math.round(currentWeather.main.feels_like) }}°C
         </p>
       </div>
 
@@ -55,12 +56,15 @@
 import { computed } from "vue";
 import Loader from "@/components/Loader.vue";
 import type { CurrentWeather } from "@/types/weather";
+import { useI18n } from "@/composables/useI18n";
 
 const props = defineProps<{
   currentWeather: CurrentWeather | null;
   isLoading: boolean;
   error: string | null;
 }>();
+
+const { t } = useI18n();
 
 const iconUrl = computed(() => {
   const icon = props.currentWeather?.weather[0]?.icon;
@@ -86,15 +90,15 @@ const details = computed(() => {
   if (!weather) return [];
 
   return [
-    { icon: "💧", label: "Humidity", value: `${weather.main.humidity}%` },
+    { icon: "💧", label: t("humidity"), value: `${weather.main.humidity}%` },
     {
       icon: "💨",
-      label: "Wind",
+      label: t("wind"),
       value: `${Math.round(weather.wind.speed)} m/s`,
     },
-    { icon: "🔵", label: "Pressure", value: `${weather.main.pressure} hPa` },
-    { icon: "🌅", label: "Sunrise", value: formatTime(weather.sys.sunrise) },
-    { icon: "🌇", label: "Sunset", value: formatTime(weather.sys.sunset) },
+    { icon: "🔵", label: t("pressure"), value: `${weather.main.pressure} hPa` },
+    { icon: "🌅", label: t("sunrise"), value: formatTime(weather.sys.sunrise) },
+    { icon: "🌇", label: t("sunset"), value: formatTime(weather.sys.sunset) },
   ];
 });
 </script>

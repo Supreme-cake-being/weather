@@ -10,14 +10,14 @@
           :class="{ 'weather-block__toggle-btn--active': mode === 'day' }"
           @click="mode = 'day'"
         >
-          Day
+          {{ t("day") }}
         </button>
         <button
           class="weather-block__toggle-btn"
           :class="{ 'weather-block__toggle-btn--active': mode === 'week' }"
           @click="mode = 'week'"
         >
-          5 days
+          {{ t("fiveDays") }}
         </button>
       </div>
     </div>
@@ -58,7 +58,7 @@ import {
 } from "@/utils/forecastHelpers";
 import type { GeoCity } from "@/types/geo";
 
-const { lang } = useI18n();
+const { lang, t } = useI18n();
 const { currentWeather, forecast, isLoading, error, load } = useWeather();
 const mode = ref<"day" | "week">("day");
 

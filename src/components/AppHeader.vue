@@ -10,14 +10,14 @@
             :class="{ 'app-header__tab--active': activeTab === 'home' }"
             @click="emit('tab-change', 'home')"
           >
-            Home
+            {{ t("home") }}
           </button>
           <button
             class="app-header__tab"
             :class="{ 'app-header__tab--active': activeTab === 'favorites' }"
             @click="emit('tab-change', 'favorites')"
           >
-            Favorites
+            {{ t("favorites") }}
           </button>
         </nav>
 
@@ -51,7 +51,7 @@ const emit = defineEmits<{
   "tab-change": [tab: "home" | "favorites"];
 }>();
 
-const { lang, setLang } = useI18n();
+const { lang, setLang, t } = useI18n();
 const langs: Lang[] = ["uk", "en"];
 </script>
 
