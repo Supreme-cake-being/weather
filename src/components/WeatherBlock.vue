@@ -101,6 +101,12 @@ const chartPoints = computed(() => {
   gap: 12px;
 }
 
+.weather-block__card-wrap {
+  border-radius: 24px;
+  overflow: hidden;
+  transition: background 1s ease;
+}
+
 .weather-block__toggle {
   display: flex;
   flex-shrink: 0;
