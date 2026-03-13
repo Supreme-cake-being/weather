@@ -1,6 +1,8 @@
 // src/constants/translations.ts
 export const translations = {
   uk: {
+    ok: "OK",
+
     // CitySearch
     searchCity: "Пошук міста",
     noResults: "Нічого не знайдено",
@@ -23,6 +25,13 @@ export const translations = {
     delete: "Видалити",
     cancel: "Скасувати",
 
+    // FavoritesView
+    addToFavorites: "Додати до вибраного",
+    removeFromFavorites: "Видалити з вибраного",
+    favoritesEmpty: "Немає вибраних міст",
+    favoritesLimitMessage:
+      "Для додавання видаліть місто з вибраного. Максимум 5 міст.",
+
     // Loader
     loading: "Завантаження...",
 
@@ -31,6 +40,8 @@ export const translations = {
     favorites: "Вибране",
   },
   en: {
+    ok: "OK",
+
     // CitySearch
     searchCity: "Search city",
     noResults: "No results",
@@ -52,6 +63,13 @@ export const translations = {
     deleteBlockMessage: "Are you sure you want to delete this block?",
     delete: "Delete",
     cancel: "Cancel",
+
+    // FavoritesView
+    addToFavorites: "Add to favorites",
+    removeFromFavorites: "Remove from favorites",
+    favoritesEmpty: "No favorite cities yet",
+    favoritesLimitMessage:
+      "To add a new city, please remove one from favorites. Maximum 5 allowed.",
 
     // Loader
     loading: "Loading...",

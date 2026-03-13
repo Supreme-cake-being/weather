@@ -51,11 +51,7 @@ const addBlock = () => {
   blocks.value.push({ id: crypto.randomUUID() });
 };
 
-const confirmRemove = (id: string) => {
-  console.log("before:", blockToRemove.value);
-  blockToRemove.value = id;
-  console.log("after:", blockToRemove.value);
-};
+const confirmRemove = (id: string) => (blockToRemove.value = id);
 
 const removeBlock = () => {
   if (!blockToRemove.value) return;
