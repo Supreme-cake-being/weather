@@ -9,8 +9,10 @@ export const useWeather = () => {
   const forecast = ref<ForecastResponse | null>(null);
   const isLoading = ref(false);
   const error = ref<string | null>(null);
+  const selectedCity = ref<GeoCity | null>(null);
 
   const load = async (city: GeoCity, lang: string) => {
+    selectedCity.value = city;
     isLoading.value = true;
     error.value = null;
 
@@ -37,5 +39,13 @@ export const useWeather = () => {
     error.value = null;
   };
 
-  return { currentWeather, forecast, isLoading, error, load, reset };
+  return {
+    currentWeather,
+    forecast,
+    isLoading,
+    error,
+    selectedCity,
+    load,
+    reset,
+  };
 };

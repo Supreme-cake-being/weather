@@ -1,7 +1,8 @@
 <template>
   <div class="weather-block">
     <div class="weather-block__toolbar">
-      <CitySearch @select="onCitySelect" />
+      <!-- Show city search if component is not readonly -->
+      <CitySearch v-if="!initialCity" @select="onCitySelect" />
 
       <!-- Toggle day / 5 days -->
       <div v-if="currentWeather" class="weather-block__toggle">
@@ -19,6 +20,8 @@
         >
           {{ t("fiveDays") }}
         </button>
+
+        <slot name="actions" />
       </div>
     </div>
 
@@ -30,7 +33,14 @@
         :error="error"
       >
         <template #actions>
-          <slot name="actions" />
+          <button
+            v-if="currentWeather"
+            class="weather-block__fav-btn"
+            :title="isFav ? t('removeFromFavorites') : t('addToFavorites')"
+            @click="onToggleFavorite"
+          >
+            {{ isFav ? "★" : "☆" }}
+          </button>
         </template>
       </WeatherCard>
 
@@ -40,16 +50,24 @@
         :text-color="textColor"
       />
     </div>
+
+    <Modal
+      v-if="showLimitModal"
+      :message="t('favoritesLimitMessage')"
+      :confirm-text="t('ok')"
+      @confirm="showLimitModal = false"
+    />
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from "vue";
+import { ref, computed, onMounted } from "vue";
 import CitySearch from "@/components/CitySearch.vue";
 import WeatherCard from "@/components/WeatherCard.vue";
 import WeatherChart from "@/components/WeatherChart.vue";
 import { useWeather } from "@/composables/useWeather";
 import { useI18n } from "@/composables/useI18n";
+import { useFavorites } from "@/composables/useFavorites";
 import { getWeatherTheme } from "@/utils/weatherTheme";
 import {
   getForecastForToday,
@@ -58,12 +76,36 @@ import {
 } from "@/utils/forecastHelpers";
 import type { GeoCity } from "@/types/geo";
 
+const props = defineProps<{
+  initialCity?: GeoCity; // if passed - component is readonly
+}>();
+
 const { lang, t } = useI18n();
-const { currentWeather, forecast, isLoading, error, load } = useWeather();
+const { currentWeather, forecast, isLoading, error, load, selectedCity } =
+  useWeather();
+const { isFavorite, toggle } = useFavorites();
+
 const mode = ref<"day" | "week">("day");
+const showLimitModal = ref(false);
+
+onMounted(() => {
+  if (props.initialCity) {
+    load(props.initialCity, lang.value);
+  }
+});
 
 const onCitySelect = (city: GeoCity) => {
   load(city, lang.value);
+};
+
+const isFav = computed(() =>
+  selectedCity.value ? isFavorite(selectedCity.value) : false,
+);
+
+const onToggleFavorite = () => {
+  if (!selectedCity.value) return;
+  const success = toggle(selectedCity.value);
+  if (!success) showLimitModal.value = true;
 };
 
 const theme = computed(() => {
@@ -134,5 +176,28 @@ const chartPoints = computed(() => {
 .weather-block__toggle-btn--active {
   background: var(--color-primary);
   color: #ffffff;
+}
+
+.weather-block__toolbar-right {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-left: auto;
+}
+
+.weather-block__fav-btn {
+  font-size: 1.3rem;
+  line-height: 1;
+  padding: 4px;
+  color: inherit;
+  opacity: 0.85;
+  transition:
+    opacity 0.2s,
+    transform 0.15s;
+}
+
+.weather-block__fav-btn:hover {
+  opacity: 1;
+  transform: scale(1.15);
 }
 </style>
