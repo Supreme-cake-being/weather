@@ -1,4 +1,3 @@
-<!-- src/views/HomeView.vue -->
 <template>
   <div class="home">
     <div class="home__blocks">
@@ -23,18 +22,21 @@
       + Add city
     </button>
 
-    <!-- <ConfirmModal
+    <Modal
       v-if="blockToRemove !== null"
+      message="Are you sure you want to delete this block?"
+      confirm-text="Delete"
+      cancel-text="Cancel"
       @confirm="removeBlock"
-      @cancel="blockToRemove = null"
-    /> -->
+      @cancel="cancelBlock"
+    />
   </div>
 </template>
 
 <script setup lang="ts">
 import { ref } from "vue";
 import WeatherBlock from "@/components/WeatherBlock.vue";
-// import ConfirmModal from "@/components/ConfirmModal.vue";
+import Modal from "@/components/Modal.vue";
 
 const MAX_BLOCKS = 5;
 
@@ -47,7 +49,9 @@ const addBlock = () => {
 };
 
 const confirmRemove = (id: string) => {
+  console.log("before:", blockToRemove.value);
   blockToRemove.value = id;
+  console.log("after:", blockToRemove.value);
 };
 
 const removeBlock = () => {
@@ -55,6 +59,8 @@ const removeBlock = () => {
   blocks.value = blocks.value.filter((b) => b.id !== blockToRemove.value);
   blockToRemove.value = null;
 };
+
+const cancelBlock = () => (blockToRemove.value = null);
 </script>
 
 <style scoped>

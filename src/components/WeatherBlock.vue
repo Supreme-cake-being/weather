@@ -24,6 +24,7 @@
 
     <div class="weather-block__card-wrap" :style="wrapStyle">
       <WeatherCard
+        v-if="currentWeather"
         :current-weather="currentWeather"
         :is-loading="isLoading"
         :error="error"
