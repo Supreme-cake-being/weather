@@ -23,3 +23,12 @@ useChart(
   toRef(() => props.textColor ?? "#cbd5e1"),
 );
 </script>
+
+<style scoped>
+.weather-chart {
+  width: 100%;
+  border-radius: 16px;
+  padding: 16px;
+  background: transparent;
+}
+</style>

@@ -5,7 +5,7 @@
         v-model="query"
         class="city-search__input"
         type="text"
-        placeholder="Search city"
+        :placeholder="t('searchCity')"
         autocomplete="off"
         role="combobox"
         aria-autocomplete="list"
@@ -67,11 +67,14 @@ import { searchCities } from "@/api";
 import type { GeoCity } from "@/types/geo";
 import { formatCityLabel } from "@/utils/formatCity";
 import { useDebounce } from "@/composables/useDebounce";
+import { useI18n } from "@/composables/useI18n";
 import Loader from "@/components/Loader.vue";
 
 const emit = defineEmits<{
   select: [city: GeoCity];
 }>();
+
+const { t } = useI18n();
 
 const query = ref("");
 const suggestions = ref<GeoCity[]>([]);
@@ -167,3 +170,108 @@ onBeforeUnmount(() => {
   cancelFetch();
 });
 </script>
+
+<style scoped>
+.city-search {
+  position: relative;
+  width: 100%;
+}
+
+.city-search__input-wrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.city-search__input {
+  width: 100%;
+  padding: 12px 40px 12px 16px;
+  border: 1px solid #e0e0e0;
+  border-radius: 12px;
+  font-size: 0.95rem;
+  outline: none;
+  transition: border-color 0.2s;
+  background: #fff;
+}
+
+.city-search__input:focus {
+  border-color: #2980b9;
+}
+
+.city-search__loader {
+  position: absolute;
+  right: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.city-search__clear {
+  position: absolute;
+  right: 12px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 0.8rem;
+  color: #9e9e9e;
+  padding: 4px;
+  line-height: 1;
+  transition: color 0.2s;
+}
+
+.city-search__clear:hover {
+  color: #424242;
+}
+
+.city-search__dropdown {
+  position: absolute;
+  top: calc(100%);
+  left: 0;
+  right: 0;
+  background: #fff;
+  border: 1px solid #e0e0e0;
+  border-radius: 12px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+  z-index: 100;
+  overflow: hidden;
+}
+
+.city-search__item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 12px 16px;
+  cursor: pointer;
+}
+
+.city-search__item--active,
+.city-search__item:hover {
+  background: #f5f5f5;
+}
+
+.city-search__item-name {
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+.city-search__item-meta {
+  font-size: 0.8rem;
+  color: #9e9e9e;
+  white-space: nowrap;
+}
+
+.city-search__empty {
+  position: absolute;
+  top: calc(100%);
+  left: 0;
+  right: 0;
+  background: #fff;
+  border: 1px solid #e0e0e0;
+  border-radius: 12px;
+  padding: 14px 16px;
+  font-size: 0.875rem;
+  color: #9e9e9e;
+  text-align: center;
+}
+</style>
