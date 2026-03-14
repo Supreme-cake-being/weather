@@ -1,5 +1,5 @@
 <template>
-  <div class="city-search" ref="rootRef">
+  <div ref="rootRef" class="city-search">
     <div class="city-search__input-wrap">
       <input
         v-model="query"
