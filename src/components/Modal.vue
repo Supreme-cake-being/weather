@@ -2,7 +2,9 @@
   <Teleport to="body">
     <div class="modal-overlay" @mousedown.self="emit('cancel')">
       <div class="modal" role="dialog" aria-modal="true">
-        <p class="modal__message">{{ message }}</p>
+        <p class="modal__message">
+          {{ message }}
+        </p>
         <div class="modal__actions">
           <button
             v-if="cancelText"

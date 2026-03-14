@@ -12,7 +12,9 @@
           <h2 class="weather-card__city">
             {{ currentWeather.name }}, {{ currentWeather.sys.country }}
           </h2>
-          <p class="weather-card__date">{{ formattedDate }}</p>
+          <p class="weather-card__date">
+            {{ formattedDate }}
+          </p>
         </div>
         <slot name="actions" />
       </div>

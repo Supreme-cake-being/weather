@@ -2,7 +2,7 @@
   <div class="weather-block">
     <div class="weather-block__toolbar">
       <!-- Show city search if component is not readonly -->
-      <CitySearch v-if="!initialCity" @select="onCitySelect" />
+      <CitySearch v-if="!readonly" @select="onCitySelect" />
 
       <!-- Toggle day / 5 days -->
       <div v-if="currentWeather" class="weather-block__toggle">
@@ -55,16 +55,17 @@
       v-if="showLimitModal"
       :message="t('favoritesLimitMessage')"
       :confirm-text="t('ok')"
-      @confirm="showLimitModal = false"
+      @confirm="onConfirm"
     />
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted } from "vue";
+import { ref, computed, watch } from "vue";
 import CitySearch from "@/components/CitySearch.vue";
 import WeatherCard from "@/components/WeatherCard.vue";
 import WeatherChart from "@/components/WeatherChart.vue";
+import Modal from "@/components/Modal.vue";
 import { useWeather } from "@/composables/useWeather";
 import { useI18n } from "@/composables/useI18n";
 import { useFavorites } from "@/composables/useFavorites";
@@ -77,7 +78,13 @@ import {
 import type { GeoCity } from "@/types/geo";
 
 const props = defineProps<{
-  initialCity?: GeoCity; // if passed - component is readonly
+  blockId: string;
+  initialCity?: GeoCity;
+  readonly?: boolean;
+}>();
+
+const emit = defineEmits<{
+  "city-selected": [id: string, city: GeoCity];
 }>();
 
 const { lang, t } = useI18n();
@@ -88,14 +95,17 @@ const { isFavorite, toggle } = useFavorites();
 const mode = ref<"day" | "week">("day");
 const showLimitModal = ref(false);
 
-onMounted(() => {
-  if (props.initialCity) {
-    load(props.initialCity, lang.value);
-  }
-});
+watch(
+  () => props.initialCity,
+  (city: GeoCity | undefined) => {
+    if (city) load(city, lang.value);
+  },
+  { immediate: true },
+);
 
 const onCitySelect = (city: GeoCity) => {
   load(city, lang.value);
+  emit("city-selected", props.blockId, city);
 };
 
 const isFav = computed(() =>
@@ -107,6 +117,8 @@ const onToggleFavorite = () => {
   const success = toggle(selectedCity.value);
   if (!success) showLimitModal.value = true;
 };
+
+const onConfirm = () => (showLimitModal.value = false);
 
 const theme = computed(() => {
   const condition = currentWeather.value?.weather[0];

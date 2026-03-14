@@ -37,7 +37,7 @@ export const translations = {
 
     // AppHeader
     home: "Головна",
-    favorites: "Вибране",
+    favorites: "Обране",
   },
   en: {
     ok: "OK",

@@ -1,7 +1,14 @@
 <template>
   <div class="home">
     <div class="home__blocks">
-      <WeatherBlock v-for="block in blocks" :key="block.id" class="home__block">
+      <WeatherBlock
+        v-for="block in blocks"
+        :key="block.id"
+        :block-id="block.id"
+        :initial-city="block.city ?? undefined"
+        class="home__block"
+        @city-selected="updateBlockCity"
+      >
         <template #actions>
           <button
             v-if="blocks.length > 1"
@@ -27,38 +34,35 @@
       :message="t('deleteBlockMessage')"
       :confirm-text="t('delete')"
       :cancel-text="t('cancel')"
-      @confirm="removeBlock"
+      @confirm="removeBlock(blockToRemove!)"
       @cancel="cancelBlock"
     />
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue";
+import { onMounted, ref } from "vue";
 import WeatherBlock from "@/components/WeatherBlock.vue";
 import Modal from "@/components/Modal.vue";
 import { useI18n } from "@/composables/useI18n";
+import { useBlocks } from "@/composables/useBlocks";
+import { useGeolocation } from "@/composables/useGeolocation";
 
 const { t } = useI18n();
+const { blocks, addBlock, removeBlock, updateBlockCity, MAX_BLOCKS } =
+  useBlocks();
+const { detectCity } = useGeolocation();
 
-const MAX_BLOCKS = 5;
-
-const blocks = ref([{ id: crypto.randomUUID() }]);
 const blockToRemove = ref<string | null>(null);
 
-const addBlock = () => {
-  if (blocks.value.length >= MAX_BLOCKS) return;
-  blocks.value.push({ id: crypto.randomUUID() });
-};
+onMounted(async () => {
+  if (blocks.value[0] && !blocks.value[0].city) {
+    const city = await detectCity();
+    if (city) updateBlockCity(blocks.value[0].id, city);
+  }
+});
 
 const confirmRemove = (id: string) => (blockToRemove.value = id);
-
-const removeBlock = () => {
-  if (!blockToRemove.value) return;
-  blocks.value = blocks.value.filter((b) => b.id !== blockToRemove.value);
-  blockToRemove.value = null;
-};
-
 const cancelBlock = () => (blockToRemove.value = null);
 </script>
 
@@ -91,7 +95,7 @@ const cancelBlock = () => (blockToRemove.value = null);
   padding: 6px 10px;
   border-radius: 8px;
   font-size: 0.85rem;
-  color: rgba(255, 255, 255, 0.7);
+  color: rgba(66, 62, 62, 0.7);
   transition: background 0.2s;
 }
 

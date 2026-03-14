@@ -4,12 +4,11 @@ import {
   type Lang,
   type TranslationKey,
 } from "@/constants/translations";
-
-const STORAGE_KEY = "app-lang";
+import { STORAGE_KEYS } from "@/constants/storageKeys";
 
 // Helper to determine the user's language on initial load
 const getInitialLang = (): Lang => {
-  const saved = localStorage.getItem(STORAGE_KEY);
+  const saved = localStorage.getItem(STORAGE_KEYS.LANG);
   if (saved === "uk" || saved === "en") return saved;
 
   // Use browser language as a fallback
@@ -30,7 +29,7 @@ export const useI18n = () => {
   // Updates the global language state and persists it to local storage
   const setLang = (newLang: Lang) => {
     lang.value = newLang;
-    localStorage.setItem(STORAGE_KEY, newLang);
+    localStorage.setItem(STORAGE_KEYS.LANG, newLang);
   };
 
   return {

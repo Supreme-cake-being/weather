@@ -8,7 +8,9 @@
       <WeatherBlock
         v-for="city in favorites"
         :key="`${city.lat}-${city.lon}`"
+        :block-id="`fav-${city.lat}-${city.lon}`"
         :initial-city="city"
+        :readonly="true"
       />
     </div>
   </div>

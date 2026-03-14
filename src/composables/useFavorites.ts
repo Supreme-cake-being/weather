@@ -1,24 +1,24 @@
 import { ref, watch } from "vue";
 import type { GeoCity } from "@/types/geo";
+import { STORAGE_KEYS } from "@/constants/storageKeys";
 
-const STORAGE_KEY = "app-favorites";
 const MAX_FAVORITES = 5;
 
 const readFromStorage = (): GeoCity[] => {
   try {
-    const raw = localStorage.getItem(STORAGE_KEY);
+    const raw = localStorage.getItem(STORAGE_KEYS.FAVORITES);
     return raw ? (JSON.parse(raw) as GeoCity[]) : [];
   } catch {
     return [];
   }
 };
 
-// Singleton — shared across all calls
+// Singleton
 const favorites = ref<GeoCity[]>(readFromStorage());
 
 watch(
   favorites,
-  (val) => localStorage.setItem(STORAGE_KEY, JSON.stringify(val)),
+  (val) => localStorage.setItem(STORAGE_KEYS.FAVORITES, JSON.stringify(val)),
   { deep: true },
 );
 
