@@ -1,5 +1,7 @@
 import type { ForecastItem } from "@/types/forecast";
 import type { ChartPoint } from "@/types/chart";
+import { formatTime } from "@/utils/formatTime";
+import { formatDateShort } from "@/utils/formatDate";
 
 export const getForecastForToday = (list: ForecastItem[]): ForecastItem[] => {
   const now = Math.floor(Date.now() / 1000);
@@ -36,18 +38,13 @@ export const getForecastForWeek = (list: ForecastItem[]): ForecastItem[] => {
 export const forecastToChartPoints = (
   items: ForecastItem[],
   timeFormat: "time" | "date" = "time",
+  lang = "en",
 ): ChartPoint[] => {
   return items.map((item) => ({
     time:
       timeFormat === "date"
-        ? new Date(item.dt * 1000).toLocaleDateString(undefined, {
-            weekday: "short",
-            day: "numeric",
-          })
-        : new Date(item.dt * 1000).toLocaleTimeString(undefined, {
-            hour: "2-digit",
-            minute: "2-digit",
-          }),
+        ? formatDateShort(item.dt, lang)
+        : formatTime(item.dt, lang),
     temp: Math.round(item.main.temp),
     feelsLike: Math.round(item.main.feels_like),
   }));
