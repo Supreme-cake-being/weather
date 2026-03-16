@@ -3,4 +3,5 @@ export const STORAGE_KEYS = {
   BLOCKS: "app-blocks",
   FAVORITES: "app-favorites",
   ACTIVE_TAB: "app-active-tab",
+  THEME: "app-theme",
 } as const;
