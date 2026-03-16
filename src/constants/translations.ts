@@ -38,6 +38,7 @@ export const translations = {
     // AppHeader
     home: "Головна",
     favorites: "Обране",
+    toggleTheme: "Змінити тему",
   },
   en: {
     ok: "OK",
@@ -77,6 +78,7 @@ export const translations = {
     // AppHeader
     home: "Home",
     favorites: "Favorites",
+    toggleTheme: "Toggle theme",
   },
 } as const;
 

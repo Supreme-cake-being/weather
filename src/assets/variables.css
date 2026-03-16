@@ -4,15 +4,27 @@
   --container-padding-md: 24px;
   --container-padding-lg: 32px;
 
-  /* Colors */
+  /* Loader */
+  --loader-track-color: rgba(0, 0, 0, 0.08);
+  --loader-spin-color: var(--color-primary);
+
+  /* Light theme (default) */
   --color-primary: #2980b9;
   --color-text: #212121;
   --color-text-secondary: #9e9e9e;
   --color-border: #e0e0e0;
   --color-bg: #f0f4f8;
   --color-surface: #ffffff;
+}
 
-  /* Loader */
-  --loader-track-color: rgba(0, 0, 0, 0.08);
-  --loader-spin-color: #2980b9;
+:root.dark {
+  --color-primary: #60a5fa;
+  --color-text: #f1f5f9;
+  --color-text-secondary: #94a3b8;
+  --color-border: #334155;
+  --color-bg: #0f172a;
+  --color-surface: #1e293b;
+
+  --loader-track-color: rgba(255, 255, 255, 0.08);
+  --loader-spin-color: var(--color-primary);
 }

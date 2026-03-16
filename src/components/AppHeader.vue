@@ -21,17 +21,28 @@
           </button>
         </nav>
 
-        <!-- Перемикач мови -->
-        <div class="app-header__lang">
+        <div class="app-header__controls">
+          <!-- Перемикач теми -->
           <button
-            v-for="l in langs"
-            :key="l"
-            class="app-header__lang-btn"
-            :class="{ 'app-header__lang-btn--active': lang === l }"
-            @click="setLang(l)"
+            class="app-header__theme-btn"
+            :title="t('toggleTheme')"
+            @click="toggleTheme"
           >
-            {{ l.toUpperCase() }}
+            {{ theme === "dark" ? "☀️" : "🌙" }}
           </button>
+
+          <!-- Перемикач мови -->
+          <div class="app-header__lang">
+            <button
+              v-for="l in langs"
+              :key="l"
+              class="app-header__lang-btn"
+              :class="{ 'app-header__lang-btn--active': lang === l }"
+              @click="setLang(l)"
+            >
+              {{ l.toUpperCase() }}
+            </button>
+          </div>
         </div>
       </div>
     </Container>
@@ -41,6 +52,7 @@
 <script setup lang="ts">
 import Container from "@/components/Container.vue";
 import { useI18n } from "@/composables/useI18n";
+import { useTheme } from "@/composables/useTheme";
 import type { Lang } from "@/constants/translations";
 
 defineProps<{
@@ -52,6 +64,7 @@ const emit = defineEmits<{
 }>();
 
 const { lang, setLang, t } = useI18n();
+const { theme, toggleTheme } = useTheme();
 const langs: Lang[] = ["uk", "en"];
 </script>
 
@@ -96,6 +109,27 @@ const langs: Lang[] = ["uk", "en"];
 .app-header__tab--active {
   background: var(--color-primary);
   color: #ffffff;
+}
+
+.app-header__controls {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.app-header__theme-btn {
+  width: 34px;
+  height: 34px;
+  border-radius: 8px;
+  font-size: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s;
+}
+
+.app-header__theme-btn:hover {
+  background: var(--color-border);
 }
 
 .app-header__lang {
