@@ -1,4 +1,4 @@
-import { watch, onMounted, onBeforeUnmount, nextTick } from "vue";
+import { watch, onBeforeUnmount, nextTick } from "vue";
 import type { Ref } from "vue";
 import ApexCharts from "apexcharts";
 import type { ApexOptions } from "apexcharts";
@@ -101,6 +101,11 @@ export const useChart = (
   const initChart = async () => {
     await nextTick();
     if (!containerRef.value || !points.value.length) return;
+
+    // Always destroy before creating a new one
+    chart?.destroy();
+    chart = null;
+
     chart = new ApexCharts(
       containerRef.value,
       buildOptions(points.value, textColor.value),
@@ -108,33 +113,22 @@ export const useChart = (
     await chart.render();
   };
 
+  watch(
+    () => points.value,
+    async (newPoints) => {
+      if (!newPoints.length) {
+        destroyChart();
+        return;
+      }
+      await initChart(); // Always full re-initialization
+    },
+    { immediate: true },
+  );
+
   const destroyChart = () => {
     chart?.destroy();
     chart = null;
   };
-
-  const updateChart = () => {
-    if (!chart) return;
-    chart.updateOptions(buildOptions(points.value, textColor.value));
-  };
-
-  onMounted(() => {
-    if (points.value.length) initChart();
-  });
-
-  watch(points, (newPoints) => {
-    if (!newPoints.length) {
-      destroyChart();
-      return;
-    }
-    // If chart already exists — update it, if not — initialize it
-    chart ? updateChart() : initChart();
-  });
-
-  // Update axis colors when the card theme changes
-  watch(textColor, () => {
-    if (chart) updateChart();
-  });
 
   onBeforeUnmount(destroyChart);
 };

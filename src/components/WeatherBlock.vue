@@ -103,6 +103,10 @@ watch(
   { immediate: true },
 );
 
+watch(lang, (newLang) => {
+  if (selectedCity.value) load(selectedCity.value, newLang);
+});
+
 const onCitySelect = (city: GeoCity) => {
   load(city, lang.value);
   emit("city-selected", props.blockId, city);
@@ -140,11 +144,16 @@ const textColor = computed(() => theme.value?.textColor ?? "#ffffff");
 
 const chartPoints = computed(() => {
   if (!forecast.value) return [];
+
   const items =
     mode.value === "day"
       ? getForecastForToday(forecast.value.list)
       : getForecastForWeek(forecast.value.list);
-  return forecastToChartPoints(items, mode.value === "day" ? "time" : "date");
+  return forecastToChartPoints(
+    items,
+    mode.value === "day" ? "time" : "date",
+    lang.value,
+  );
 });
 </script>
 

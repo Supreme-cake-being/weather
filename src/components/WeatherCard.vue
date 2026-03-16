@@ -59,6 +59,8 @@ import { computed } from "vue";
 import Loader from "@/components/Loader.vue";
 import type { CurrentWeather } from "@/types/weather";
 import { useI18n } from "@/composables/useI18n";
+import { formatDate } from "@/utils/formatDate";
+import { formatTime } from "@/utils/formatTime";
 
 const props = defineProps<{
   currentWeather: CurrentWeather | null;
@@ -66,26 +68,14 @@ const props = defineProps<{
   error: string | null;
 }>();
 
-const { t } = useI18n();
+const { lang, t } = useI18n();
 
 const iconUrl = computed(() => {
   const icon = props.currentWeather?.weather[0]?.icon;
   return icon ? `https://openweathermap.org/img/wn/${icon}@2x.png` : "";
 });
 
-const formattedDate = computed(() =>
-  new Date().toLocaleDateString(undefined, {
-    weekday: "long",
-    day: "numeric",
-    month: "long",
-  }),
-);
-
-const formatTime = (unix: number): string =>
-  new Date(unix * 1000).toLocaleTimeString(undefined, {
-    hour: "2-digit",
-    minute: "2-digit",
-  });
+const formattedDate = computed(() => formatDate(lang.value));
 
 const details = computed(() => {
   const weather = props.currentWeather;
@@ -99,8 +89,16 @@ const details = computed(() => {
       value: `${Math.round(weather.wind.speed)} m/s`,
     },
     { icon: "🔵", label: t("pressure"), value: `${weather.main.pressure} hPa` },
-    { icon: "🌅", label: t("sunrise"), value: formatTime(weather.sys.sunrise) },
-    { icon: "🌇", label: t("sunset"), value: formatTime(weather.sys.sunset) },
+    {
+      icon: "🌅",
+      label: t("sunrise"),
+      value: formatTime(weather.sys.sunrise, lang.value),
+    },
+    {
+      icon: "🌇",
+      label: t("sunset"),
+      value: formatTime(weather.sys.sunset, lang.value),
+    },
   ];
 });
 </script>
