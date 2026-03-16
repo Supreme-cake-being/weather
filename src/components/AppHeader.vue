@@ -22,7 +22,6 @@
         </nav>
 
         <div class="app-header__controls">
-          <!-- Перемикач теми -->
           <button
             class="app-header__theme-btn"
             :title="t('toggleTheme')"
@@ -31,7 +30,6 @@
             {{ theme === "dark" ? "☀️" : "🌙" }}
           </button>
 
-          <!-- Перемикач мови -->
           <div class="app-header__lang">
             <button
               v-for="l in langs"
@@ -77,23 +75,39 @@ const langs: Lang[] = ["uk", "en"];
   z-index: 10;
 }
 
+/* Mobile — grid 2x2:
+   [логотип]  [controls]
+   [nav    ]  [nav     ]
+*/
 .app-header__inner {
-  display: flex;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  grid-template-areas:
+    "logo controls"
+    "nav  nav";
   align-items: center;
-  gap: 24px;
-  height: 60px;
+  padding: 10px 0;
+  gap: 8px 16px;
 }
 
 .app-header__logo {
+  grid-area: logo;
   font-size: 1.2rem;
   font-weight: 700;
   color: var(--color-primary);
-  margin-right: auto;
 }
 
 .app-header__nav {
+  grid-area: nav;
   display: flex;
   gap: 4px;
+}
+
+.app-header__controls {
+  grid-area: controls;
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
 
 .app-header__tab {
@@ -111,20 +125,11 @@ const langs: Lang[] = ["uk", "en"];
   color: #ffffff;
 }
 
-.app-header__controls {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
 .app-header__theme-btn {
   width: 34px;
   height: 34px;
   border-radius: 8px;
   font-size: 1rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
   transition: background 0.2s;
 }
 
@@ -150,5 +155,21 @@ const langs: Lang[] = ["uk", "en"];
 .app-header__lang-btn--active {
   background: var(--color-primary);
   color: #ffffff;
+}
+
+/* Десктоп — один рядок: [логотип] → [nav] [controls] */
+@media (min-width: 768px) {
+  .app-header__inner {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    height: 60px;
+    padding: 0;
+    gap: 16px;
+  }
+
+  .app-header__logo {
+    margin-right: auto;
+  }
 }
 </style>
