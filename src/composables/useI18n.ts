@@ -23,7 +23,18 @@ const lang = ref<Lang>(getInitialLang());
 export const useI18n = () => {
   // Translation function to get the string for a specific key
   const t = (key: TranslationKey): string => {
-    return translations[lang.value][key];
+    const value = translations[lang.value][key];
+    // Guard against accidentally returning an object if the key is wrong
+    if (typeof value === "object") return "";
+    return value as string;
+  };
+
+  // Function to get error messages based on status codes
+  const tError = (status: number | null): string => {
+    const errors = translations[lang.value].error;
+    if (status === null) return errors.network;
+    if (status in errors) return String(errors[status as keyof typeof errors]);
+    return errors.unknown;
   };
 
   // Updates the global language state and persists it to local storage
@@ -35,6 +46,7 @@ export const useI18n = () => {
   return {
     lang: computed(() => lang.value),
     t,
+    tError,
     setLang,
   };
 };

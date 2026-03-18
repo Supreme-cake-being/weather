@@ -25,9 +25,12 @@
       </div>
     </div>
 
-    <div class="weather-block__card-wrap" :style="wrapStyle">
+    <div
+      v-if="isLoading || error || currentWeather"
+      class="weather-block__card-wrap"
+      :style="wrapStyle"
+    >
       <WeatherCard
-        v-if="currentWeather"
         :current-weather="currentWeather"
         :is-loading="isLoading"
         :error="error"
@@ -149,6 +152,7 @@ const chartPoints = computed(() => {
     mode.value === "day"
       ? getForecastForToday(forecast.value.list)
       : getForecastForWeek(forecast.value.list);
+
   return forecastToChartPoints(
     items,
     mode.value === "day" ? "time" : "date",
