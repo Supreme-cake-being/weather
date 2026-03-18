@@ -3,7 +3,8 @@
     <Loader v-if="isLoading" size="lg" />
 
     <div v-else-if="error" class="weather-card__error">
-      {{ error }}
+      <span class="weather-card__error-icon">⚠️</span>
+      <p>{{ error }}</p>
     </div>
 
     <template v-else-if="currentWeather && currentWeather.weather[0]">
@@ -208,10 +209,20 @@ const details = computed(() => {
 
 .weather-card__error {
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 40px;
-  color: #ef5350;
+  gap: 8px;
+  padding: 40px 24px;
+  text-align: center;
+}
+
+.weather-card__error-icon {
+  font-size: 2rem;
+}
+
+.weather-card__error p {
   font-size: 0.9rem;
+  opacity: 0.9;
 }
 </style>
