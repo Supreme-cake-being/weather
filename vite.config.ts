@@ -16,7 +16,14 @@ export default defineConfig({
       provider: "v8",
       reporter: ["text", "html"],
       include: ["src/components/**", "src/composables/**", "src/utils/**"],
-      exclude: ["src/composables/useChart.ts"],
+      exclude: [
+        "src/composables/useChart.ts",
+        "src/components/AppHeader.vue",
+        "src/components/Container.vue",
+        "src/components/Loader.vue",
+        "src/components/WeatherCard.vue",
+        "src/components/WeatherChart.vue",
+      ],
     },
   },
 });
