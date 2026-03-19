@@ -15,7 +15,8 @@ export default defineConfig({
     coverage: {
       provider: "v8",
       reporter: ["text", "html"],
-      include: ["src/composables/**", "src/utils/**"],
+      include: ["src/components/**", "src/composables/**", "src/utils/**"],
+      exclude: ["src/composables/useChart.ts"],
     },
   },
 });
