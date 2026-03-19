@@ -157,7 +157,7 @@ const langs: Lang[] = ["uk", "en"];
   color: #ffffff;
 }
 
-/* Десктоп — один рядок: [логотип] → [nav] [controls] */
+/* Desktop — one row: [логотип] → [nav] [controls] */
 @media (min-width: 768px) {
   .app-header__inner {
     display: flex;
