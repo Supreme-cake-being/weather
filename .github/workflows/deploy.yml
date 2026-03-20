@@ -1,18 +1,16 @@
-name: Deploy to Github Pages
+name: Deploy to GitHub Pages
 on:
   push:
     branches:
       - main
 env:
   NODE_VERSION: 20
-permissions:
-  contents: write
 jobs:
   test:
-    name: Run tests
+    name: Lint & Test
     runs-on: ubuntu-latest
     steps:
-      - name: Get Code
+      - name: Checkout
         uses: actions/checkout@v4
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -21,18 +19,16 @@ jobs:
           cache: npm
       - name: Install dependencies
         run: npm ci
-      - name: Lint code
+      - name: Lint
         run: npm run lint
-      - name: Run tests
-        run: npm test
-      - name: Output information
-        run: echo "Tests completed successfully"
-  deploy:
-    name: Build & Deploy to GitHub Pages
+      - name: Test
+        run: npm run test -- --run
+  build:
+    name: Build
     needs: test
     runs-on: ubuntu-latest
     steps:
-      - name: Get Code
+      - name: Checkout
         uses: actions/checkout@v4
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -41,9 +37,31 @@ jobs:
           cache: npm
       - name: Install dependencies
         run: npm ci
-      - name: Build project
+      - name: Build
         run: npm run build
-      - name: Deploy to GitHub Pages
+        env:
+          VITE_WEATHER_API_KEY: ${{ secrets.VITE_WEATHER_API_KEY }}
+          VITE_WEATHER_API_URL: ${{ secrets.VITE_WEATHER_API_URL }}
+          VITE_GEO_API_URL: ${{ secrets.VITE_GEO_API_URL }}
+      - name: Upload build artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: dist
+          path: ./dist
+          retention-days: 1
+  deploy:
+    name: Deploy to GitHub Pages
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Download build artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: dist
+          path: ./dist
+      - name: Deploy
         uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
